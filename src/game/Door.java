@@ -32,6 +32,10 @@ public class Door {
 	public void showQuestion(Question question) {
 		// TODO
 	}
+	
+	public void getAnswer() {
+		// TODO
+	}
 
 	public boolean isDoor() {
 		return isDoor;
