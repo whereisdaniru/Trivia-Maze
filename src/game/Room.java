@@ -1,6 +1,7 @@
 package game;
 
 public class Room {
+	
 private Door north, east, south, west;
 	
 	public Room(Door northDoor, Door eastDoor, Door southDoor, Door westDoor) {
