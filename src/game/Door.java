@@ -1,13 +1,20 @@
 package game;
 
+enum DoorStatus {
+	Init,
+	Passed,
+	Locked
+}
+
 public class Door {
 	
-	private boolean isDoor, isOpen, isEntrance, isExit;
+	private boolean isDoor, isEntrance, isExit;
+	private DoorStatus status;
 	private Question question;
 	
-	public Door(boolean isDoor, boolean isOpen, boolean isEntrance, boolean isExit, Question question) {
+	public Door(boolean isDoor, DoorStatus status, boolean isEntrance, boolean isExit, Question question) {
 		this.setDoor(isDoor);
-		this.setOpen(isOpen);
+		this.setStatus(status);
 		this.setEntrance(isEntrance);
 		this.setExit(isExit);
 		this.setQuestion(question);
@@ -15,11 +22,15 @@ public class Door {
 	
 	public Door() {
 		this.setDoor(false);
-		this.setOpen(false);
+		this.setStatus(DoorStatus.Init);
 		this.setEntrance(false);
 		this.setExit(false);
 		// should be a default
 		this.setQuestion(null);
+	}
+	
+	public void showQuestion(Question question) {
+		// TODO
 	}
 
 	public boolean isDoor() {
@@ -28,14 +39,6 @@ public class Door {
 
 	public void setDoor(boolean isDoor) {
 		this.isDoor = isDoor;
-	}
-
-	public boolean isOpen() {
-		return isOpen;
-	}
-
-	public void setOpen(boolean isOpen) {
-		this.isOpen = isOpen;
 	}
 
 	public boolean isEntrance() {
@@ -60,5 +63,13 @@ public class Door {
 
 	public void setQuestion(Question question) {
 		this.question = question;
+	}
+
+	public DoorStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(DoorStatus status) {
+		this.status = status;
 	}
 }

@@ -20,7 +20,7 @@ public class SimpleMaze implements MazeBuilder {
 		if(i == 0 && j == 0) {
 			current.getNorth().setDoor(true);
 			current.getNorth().setEntrance(true);
-			current.getNorth().setOpen(true);
+			current.getNorth().setStatus(DoorStatus.Init);
 			current.getWest().setDoor(false);
 			current.getSouth().setDoor(true);
 			current.getEast().setDoor(true);
@@ -29,7 +29,7 @@ public class SimpleMaze implements MazeBuilder {
 		else if(i == maze.length - 1 && j == maze[0].length - 1) {
 			current.getSouth().setDoor(true);
 			current.getSouth().setExit(true);
-			current.getSouth().setOpen(true);
+			current.getSouth().setStatus(DoorStatus.Init);
 			current.getWest().setDoor(true);
 			current.getNorth().setDoor(true);
 			current.getEast().setDoor(false);
