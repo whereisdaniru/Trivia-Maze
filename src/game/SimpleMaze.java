@@ -83,7 +83,6 @@ public class SimpleMaze implements MazeBuilder {
 			current.getSouth().setDoor(true);
 			current.getWest().setDoor(true);
 		}
-		
 		return current;
 	}
 

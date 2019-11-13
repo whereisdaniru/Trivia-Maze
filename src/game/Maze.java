@@ -1,7 +1,7 @@
 package game;
 
 public class Maze {
-	private Player player;
+	
 	private Room[][] maze;
 	private int column, row;
 	private String type;
@@ -20,14 +20,6 @@ public class Maze {
 		if(this.type.equals("Complex")) {
 			this.maze = new ComplexMaze().buildMaze(this.row, this.column);
 		}
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	public Room[][] getMaze() {
