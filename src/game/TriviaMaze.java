@@ -19,62 +19,94 @@ public class TriviaMaze {
 		
 		
 		while(gameInProgress) {
+			int currRow = player.getLocation().getX();
+			int currColumn = player.getLocation().getY();
+			Room currRoom = field[currRow][currColumn];
+			
+			System.out.println("\n\nCurrent Row: " + currRow + "\nCurrent Column: " + currColumn + "\n\n");
+			
 			System.out.print("Which way would you like to move? w:up a:left s:down d:right  --press q to quit--");
 			System.out.print("Choice --> ");
 			choice = kb.next().charAt(0);
 			
 			switch (choice) {
 				case 'w':
-					if(canMove('w', field, player)) {
-						
+					if(canMove(choice, currRoom)) {
+						player.getLocation().setLocation(currRow - 1, currColumn);
 					}
+					else {
+						System.out.println("Not a valid move!");
+					}
+					break;
 				
-				case 'a': // move left
+				case 'a': 
+					if(canMove(choice, currRoom)) {
+						player.getLocation().setLocation(currRow, currColumn - 1);
+					}
+					else {
+						System.out.println("Not a valid move!");
+					}
+					break;
 					
-				case 's': // move down
+				case 's':
+					if(canMove(choice, currRoom)) {
+						player.getLocation().setLocation(currRow + 1, currColumn);
+					}
+					else {
+						System.out.println("Not a valid move!");
+					}
+					break;
 					
-				case 'd': // move right
+				case 'd':
+					if(canMove(choice, currRoom)) {
+						player.getLocation().setLocation(currRow, currColumn + 1);
+					}
+					else {
+						System.out.println("Not a valid move!");
+					}
+					break;
+					
+				case 'q':
+					System.out.println("Game ending....");
+					gameInProgress = false;
+					break;
 			}
 		}
-		
 		return false;
 	}
 
-	private static boolean canMove(char c, Room[][] field, Player player) {
-		int currRow = player.getLocation().getX();
-		int currColumn = player.getLocation().getY();
-		Room currRoom = field[currRow][currColumn];
+	private static boolean canMove(char c, Room currRoom) {
 		
 		switch(c) {
 			case 'w':
-				if(currRoom.getNorth().isDoor()
+				if(currRoom.getNorth().isDoor() && currRoom.getNorth().isEntrance() == false
 						&& currRoom.getNorth().getStatus() != DoorStatus.Locked) {
-					return false;
+					return true;
 				}
 				break;
 		
 			case 'a': 
 				if(currRoom.getWest().isDoor()
 						&& currRoom.getWest().getStatus() != DoorStatus.Locked) {
-					return false;
+					return true;
 				}
 				break;
 			
 			case 's': 
-				if(currRoom.getSouth().isDoor()
+				if(currRoom.getSouth().isDoor() && currRoom.getSouth().isExit() == false
 						&& currRoom.getSouth().getStatus() != DoorStatus.Locked) {
-					return false;
+					return true;
 				}
 				break;
 			
 			case 'd':
 				if(currRoom.getEast().isDoor()
 						&& currRoom.getEast().getStatus() != DoorStatus.Locked) {
-					return false;
+					return true;
 				}
 				break;
 		}
-		return true;
+		return false;
 	}
 
 }
