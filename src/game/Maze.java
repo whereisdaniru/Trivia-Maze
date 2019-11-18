@@ -1,20 +1,25 @@
 package game;
 
 public class Maze {
-	private Player player;
+	
 	private Room[][] maze;
 	private int column, row;
+	private String type;
 	
-	public Maze(Room[][] maze) {
-		this.setMaze(maze);
+	public Maze(int row, int column, String type) {
+		this.setRow(row);
+		this.setColumn(column);
+		this.setType(type);
+		constructMaze();
 	}
 
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
+	private void constructMaze() {
+		if(this.type.equals("Simple")) {
+			this.maze = new SimpleMaze().buildMaze(this.row, this.column);
+		}
+		if(this.type.equals("Complex")) {
+			this.maze = new ComplexMaze().buildMaze(this.row, this.column);
+		}
 	}
 
 	public Room[][] getMaze() {
@@ -39,5 +44,13 @@ public class Maze {
 
 	public void setRow(int row) {
 		this.row = row;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
