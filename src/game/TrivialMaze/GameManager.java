@@ -9,56 +9,34 @@ public class GameManager extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 640, HEIGHT = 480;  // Center: WIDTH/2 -32, HEIGHT/2 -32
-	private static final int XPLAYER = 228; // Initialize location x of player
-	private static final int YPLAYER = 148; // Initialize location y of player
-	private static final int DISTROOM = 60; // Distance of 2 room
+//	private static final int XPLAYER = 228; // Initialize location x of player
+//	private static final int YPLAYER = 148; // Initialize location y of player
+	private static final int ROOMDIST = 30; // Distance from center player to the door/wall
+	private static final int BORDERDIST = 18; // Distance from border player to the door/wall
 	private static int x = 210, y = 130; // Initialize location of first room.
+	
+	private Direction direction; //direction of movement
 	
 	private Thread threadGame;
 	private boolean running = false;
 	
 	private Handler handler;
+	private QuestionWindow questionWD;
+	private WindowState windowState = WindowState.GameWindow; //public for player can change the window state when hit the door
 	public GameManager() {
 		handler = new Handler();
-		this.addKeyListener(new KeyInput(handler));
+		questionWD = new QuestionWindow(handler,this);
+		this.addMouseListener(questionWD);
+		this.addKeyListener(new KeyInput(handler, this));
 		new Window(WIDTH, HEIGHT, "Trivial Maze", this);
-		buildRoom(3, 3, x, y);
-		buildDoor(3, 3, x, y);
-
 		
 		//handler.addObject(new Player(118, 118, ID.Player));
-		handler.addObject(new Player(XPLAYER, YPLAYER, ID.Player, handler));
-		handler.addObject(new Target(XPLAYER + DISTROOM * 2, YPLAYER +DISTROOM * 2 , ID.Target));
+		if(windowState == WindowState.GameWindow) {
+			SimpleMaze simpleMaze = new SimpleMaze();
+			simpleMaze.buildMaze(3, 3, x, y, ROOMDIST,BORDERDIST, handler, this);
+		}
 	}
 	
-	private void buildRoom(int row, int col, int x, int y) {
-		int temp = x;
-		int horDist = 60; //distance from 2 room
-		for(int i = 0; i < row; i++) {
-			for(int j = 0; j < col; j++) {
-				handler.addObject(new Room(x, y, ID.Room, handler));
-				x +=horDist;
-			}
-			x = temp;
-			y += horDist;
-		}
-	}
-	private void buildDoor(int row, int col, int x, int y) {
-		int temp = x;
-		int horDist = 60; //distance from 2 room
-		int verDist = 14; //distance from top room to top door
-		for(int i = 0; i < row; i++) {
-			for(int j = 0; j < col; j++) {
-				if(j < col-1 )
-					handler.addObject(new Door(x+horDist, y+verDist, ID.DoorVertical));
-				if (i < row-1)
-					handler.addObject(new Door(x+verDist, y+horDist, ID.DoorHorizontal));
-				x +=horDist;
-			}
-			x = temp;
-			y += horDist;
-		}
-	}
 
 	/*  the game loop
 	 *  it checks whether enough time has passed (1/60 sec) to refresh the game, and checks whether enough time has passed (1 sec) to refresh the FPS counter;
@@ -82,29 +60,30 @@ public class GameManager extends Canvas implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             // whenever delta >= 1, we call tick()
-            // if game's running, call render()
             while(delta >=1)
-                {
-                    tick();
-                    delta--;
-                }
-            	//if game's running, call render()
-                if(running)
-                    render();
-                
-                frames++;
-                if(System.currentTimeMillis() - timer > 1000) // if one second has passed
-                {
-                    timer += 1000;
-                    //System.out.println("FPS: "+ frames); // print out how many frames have happened in the last second
-                    frames = 0;
-                }
+            {
+                tick();
+                delta--;
+            }
+        	//if game's running, call render()
+            if(running)
+                render();
+            
+            frames++;
+            if(System.currentTimeMillis() - timer > 1000) // if one second has passed
+            {
+                timer += 1000;
+                //System.out.println("FPS: "+ frames); // print out how many frames have happened in the last second
+                frames = 0;
+            }
         }
         stop();
     }
 	
 	private void tick() {
-		handler.tick();
+		if(windowState == WindowState.GameWindow) {
+			handler.tick();
+		}
 	}
 	
 	private void render() {
@@ -118,8 +97,12 @@ public class GameManager extends Canvas implements Runnable {
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		handler.render(g);
-		//hud.render(g);
+		
+		if(windowState == WindowState.GameWindow) {
+			handler.render(g);
+		} else if (windowState == WindowState.QuestionWindow) {
+			questionWD.render(g);
+		}
 		
 		g.dispose();
 		bs.show();
@@ -149,6 +132,21 @@ public class GameManager extends Canvas implements Runnable {
 			return var;
 	}
 	
+	public WindowState getWindowState() {
+		return this.windowState;
+	}
+	public void setWindowState(WindowState ws) {
+		this.windowState = ws;
+	}
+	public int getDistRoom() {
+		return ROOMDIST;
+	}
+	public void setDirection(Direction d) {
+		this.direction = d;
+	}
+	public Direction getDirection() {
+		return direction;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new GameManager();

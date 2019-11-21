@@ -18,6 +18,10 @@ public abstract class GameObject {
 	public abstract void tick(); 				// Update 
 	public abstract void render(Graphics g); 	// draw window
 	public abstract Rectangle getBounds();		// handle collision (Rectangle has intersect method to handle if two rectangles intersect each other)
+	public void moveUp() {};
+	public void moveDown() {};
+	public void moveRight() {};
+	public void moveLeft() {};
 	public void setX(int x) {
 		this.x = x;
 	}
