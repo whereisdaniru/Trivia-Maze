@@ -1,4 +1,4 @@
-package TrivialMaze;
+package triviaMaze;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
