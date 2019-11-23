@@ -1,4 +1,4 @@
-package triviaMaze;
+package TrivialMaze;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -30,11 +30,20 @@ public class Player extends GameObject{
 	}
 	private void collisionCheck() {
 		for (GameObject gameObject : handler.gameObjects) {
-			// check intersect of player and basic enemy
+			// check intersect of player and door
 			if(gameObject.getID() == ID.DoorVertical || gameObject.getID() == ID.DoorHorizontal) {
-				if(getBounds().intersects(gameObject.getBounds())) {
+				if(getBounds().intersects(gameObject.getBounds()) && (gameObject.getDoorStatus() == DoorStatus.Init || gameObject.getDoorStatus() == DoorStatus.Locked)) {
 					// collision code in here
 					// System.out.println("Hit the door!");
+					gameManager.setSelectedObject(gameObject);
+					gameManager.setWindowState(WindowState.QuestionWindow);
+				} else if(getBounds().intersects(gameObject.getBounds()) && gameObject.getDoorStatus() == DoorStatus.Passed) {
+					moveForward();
+				}
+			}
+			else if(gameObject.getID() == ID.Target) {
+				if(getBounds().intersects(gameObject.getBounds())){
+					gameManager.setSelectedObject(gameObject);
 					gameManager.setWindowState(WindowState.QuestionWindow);
 				}
 			}
@@ -64,6 +73,42 @@ public class Player extends GameObject{
 	public void moveLeft() {
 		if(this.getX() > XPLAYER)
 			this.setX(this.getX() - gameManager.getDistRoom());
+	}
+	public void moveForward() {
+		switch(gameManager.getDirection()) {
+		case Down:
+			moveDown();
+			break;
+		case Up:
+			moveUp();
+			break;
+		case Right:
+			moveRight();
+			break;
+		case Left:
+			moveLeft();
+			break;
+		default:
+			break;
+		}
+	}
+	public void moveBackward() {
+		switch(gameManager.getDirection()) {
+		case Down:
+			moveUp();
+			break;
+		case Up:
+			moveDown();
+			break;
+		case Right:
+			moveLeft();
+			break;
+		case Left:
+			moveRight();
+			break;
+		default:
+			break;
+		}
 	}
 	@Override
 	public void render(Graphics g) {

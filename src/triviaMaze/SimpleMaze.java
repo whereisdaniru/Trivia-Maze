@@ -1,4 +1,4 @@
-package triviaMaze;
+package TrivialMaze;
 
 public class SimpleMaze implements MazeBuilder{
 
@@ -29,9 +29,9 @@ public class SimpleMaze implements MazeBuilder{
 		for(int i = 0; i < row; i++) {
 			for(int j = 0; j < col; j++) {
 				if(j < col-1 )
-					handler.addObject(new Door(x+horDist, y+verDist, ID.DoorVertical));
+					handler.addObject(new Door(x+horDist, y+verDist, ID.DoorVertical, new Question(), DoorStatus.Init));
 				if (i < row-1)
-					handler.addObject(new Door(x+verDist, y+horDist, ID.DoorHorizontal));
+					handler.addObject(new Door(x+verDist, y+horDist, ID.DoorHorizontal, new Question(), DoorStatus.Init));
 				x +=horDist;
 			}
 			x = temp;

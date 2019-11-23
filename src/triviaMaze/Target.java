@@ -1,4 +1,4 @@
-package triviaMaze;
+package TrivialMaze;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,13 +21,13 @@ public class Target extends GameObject{
 	public void render(Graphics g) {
 		// TODO Auto-generated method stub
 		g.setColor(Color.red);
-		g.fillOval(x, y, 32, 32);
+		g.fillOval(x+6, y+6, 20, 20);
 	}
 
 	@Override
 	public Rectangle getBounds() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Rectangle(x +6, y+6, 20, 20);
 	}
 
 }
