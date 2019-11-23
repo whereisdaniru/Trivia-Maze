@@ -18,8 +18,13 @@ public class Handler {
 		}
 	}
 	public void render(Graphics g) {
-		for (GameObject gameObject : gameObjects) {
-			gameObject.render(g);
+//		for (GameObject gameObject : gameObjects) {
+//			gameObject.render(g);
+//		}
+		
+		for(int i = 0; i < gameObjects.size(); i++) {
+			GameObject temp = gameObjects.get(i);
+			temp.render(g);
 		}
 		
 	}
@@ -28,5 +33,11 @@ public class Handler {
 	}
 	public void removeObject(GameObject object) {
 		this.gameObjects.remove(object);
+	}
+	public void removeAllObject() {
+		for(int i = 0; i < gameObjects.size(); i++) {
+			removeObject(gameObjects.get(i));
+			i--;
+		}
 	}
 }

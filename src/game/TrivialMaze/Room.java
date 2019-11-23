@@ -12,10 +12,10 @@ public class Room extends GameObject{
 		this.handler = handler;
 		
 	}
-	private void addDoors() {
-		handler.addObject(new Door(x+60, y+14, ID.DoorVertical));
-		handler.addObject(new Door(x+14, y+60, ID.DoorHorizontal));
-	}
+//	private void addDoors() {
+//		handler.addObject(new Door(x+60, y+14, ID.DoorVertical));
+//		handler.addObject(new Door(x+14, y+60, ID.DoorHorizontal));
+//	}
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub

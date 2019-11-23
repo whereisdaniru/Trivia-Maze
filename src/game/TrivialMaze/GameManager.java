@@ -15,16 +15,20 @@ public class GameManager extends Canvas implements Runnable {
 	private static final int BORDERDIST = 18; // Distance from border player to the door/wall
 	private static int x = 210, y = 130; // Initialize location of first room.
 	
-	private Direction direction; //direction of movement
+	private Direction direction; 	// direction of movement
 	
 	private Thread threadGame;
 	private boolean running = false;
 	
 	private Handler handler;
+	private QuestionHandler questionHandler;
 	private QuestionWindow questionWD;
+	private GameObject selectedObject = null;
 	private WindowState windowState = WindowState.GameWindow; //public for player can change the window state when hit the door
+	
 	public GameManager() {
 		handler = new Handler();
+		questionHandler = QuestionHandler.getInstance();
 		questionWD = new QuestionWindow(handler,this);
 		this.addMouseListener(questionWD);
 		this.addKeyListener(new KeyInput(handler, this));
@@ -32,14 +36,13 @@ public class GameManager extends Canvas implements Runnable {
 		
 		//handler.addObject(new Player(118, 118, ID.Player));
 		if(windowState == WindowState.GameWindow) {
-			SimpleMaze simpleMaze = new SimpleMaze();
-			simpleMaze.buildMaze(3, 3, x, y, ROOMDIST,BORDERDIST, handler, this);
+			newGame();
 		}
 	}
 	
 
 	/*  the game loop
-	 *  it checks whether enough time has passed (1/60 sec) to refresh the game, and checks whether enough time has passed (1 sec) to refresh the FPS counter;
+	 *  it checks whether enough time has passed to refresh the game, and checks whether enough time has passed (1 sec) to refresh the FPS counter;
 	 *  while 'running' it adds the time it took to go through one iteration of the loop it self 
 	 *  and adds it to delta (which is simplified to 1)
 	 *  so once it reaches 1 delta it means enough time has passed to go forward one tick.
@@ -122,16 +125,17 @@ public class GameManager extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
-	public static int clamp(int var, int min, int max) {
-		if(var <= min)
-			return var = min;
-		else if (var >= max)
-			return var = max;
-		else
-			return var;
+
+	public void newGame() {
+		SimpleMaze simpleMaze = new SimpleMaze();
+		simpleMaze.buildMaze(3, 3, x, y, ROOMDIST,BORDERDIST, handler, this);
 	}
-	
+	public void clearObject() {
+		selectedObject = null;
+		windowState = WindowState.GameWindow;
+		handler.removeAllObject();
+		questionHandler.resetQuestion();
+	}
 	public WindowState getWindowState() {
 		return this.windowState;
 	}
@@ -147,8 +151,21 @@ public class GameManager extends Canvas implements Runnable {
 	public Direction getDirection() {
 		return direction;
 	}
+	public void setSelectedObject(GameObject object) {
+		this.selectedObject = object;
+	}
+	public GameObject getSelectedObject() {
+		return selectedObject;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new GameManager();
+//		int i = 0;
+//		// loop until get a question which is never used
+//		while(i<7) {
+//			Question q = new Question();
+//			System.out.println(q.toString());
+//			i++;
+//		}
 	}
 }

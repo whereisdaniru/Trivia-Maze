@@ -19,59 +19,54 @@ public class QuestionWindow extends MouseAdapter{
 		if(gameManager.getWindowState() == WindowState.QuestionWindow) {
 			int xmouse = e.getX(); //get temporary mouse click position
 			int ymouse = e.getY();
-			// True button click handle
-			if(mouseOver(xmouse, ymouse, new Rectangle(210, 116, 200, 64))) {
-				playerMoveForward();
-				gameManager.setWindowState(WindowState.GameWindow);
-			}
-			// False button click handle
-			if(mouseOver(xmouse, ymouse, new Rectangle(210, 200, 200, 64))) {
-				playerMoveBackward();
-				gameManager.setWindowState(WindowState.GameWindow);
+			// Question window handle
+			if (gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Init) {
+				// True button click handle
+				if(mouseOver(xmouse, ymouse, new Rectangle(210, 116, 200, 64))) {
+					playerMoveForward();
+					// change status of the door to passed
+					gameManager.getSelectedObject().setDoorStatus(DoorStatus.Passed);
+					gameManager.setWindowState(WindowState.GameWindow);
+				}
+				// False button click handle
+				if(mouseOver(xmouse, ymouse, new Rectangle(210, 200, 200, 64))) {
+					playerMoveBackward();
+					gameManager.getSelectedObject().setDoorStatus(DoorStatus.Locked);
+					gameManager.setWindowState(WindowState.GameWindow);
+				}
+				
+			// Locked window handle
+			} else if(gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Locked) {
+				// OK button click handle
+				if(mouseOver(xmouse, ymouse, new Rectangle(210, 300, 200, 64))) {
+					playerMoveBackward();
+					gameManager.setWindowState(WindowState.GameWindow);
+				}
+				
+			// Won window handle
+			} else if (gameManager.getSelectedObject().getID() == ID.Target) {
+				// OK button click handle
+				if(mouseOver(xmouse, ymouse, new Rectangle(210, 300, 200, 64))) {
+					//Call the new game function
+					gameManager.clearObject();
+					gameManager.newGame();
+					//gameManager.setWindowState(WindowState.GameWindow);
+				}
 			}
 		}
 	}
+
 	private void playerMoveForward() {
 		for (GameObject gameObject : handler.gameObjects) {
 			if(gameObject.getID() == ID.Player) {
-				switch(gameManager.getDirection()) {
-				case Down:
-					gameObject.moveDown();
-					break;
-				case Up:
-					gameObject.moveUp();
-					break;
-				case Right:
-					gameObject.moveRight();
-					break;
-				case Left:
-					gameObject.moveLeft();
-					break;
-				default:
-					break;
-				}
+				gameObject.moveForward();
 			}
 		}
 	}
 	private void playerMoveBackward() {
 		for (GameObject gameObject : handler.gameObjects) {
 			if(gameObject.getID() == ID.Player) {
-				switch(gameManager.getDirection()) {
-				case Down:
-					gameObject.moveUp();
-					break;
-				case Up:
-					gameObject.moveDown();
-					break;
-				case Right:
-					gameObject.moveLeft();
-					break;
-				case Left:
-					gameObject.moveRight();
-					break;
-				default:
-					break;
-				}
+				gameObject.moveBackward();
 			}
 		}
 	}
@@ -90,24 +85,96 @@ public class QuestionWindow extends MouseAdapter{
 	public void tick() {}
 	public void render(Graphics g) {
 		if(gameManager.getWindowState() == WindowState.QuestionWindow) {
-			Font bigFont = new Font("airal", 1,50);
-			Font normalFont = new Font("airal", 1,40);
-			g.setFont(bigFont);
-			g.setColor(Color.WHITE);
-			g.drawString("Question", 210, 50);
-			
-			g.setFont(normalFont);
-			g.setColor(Color.white);
-			g.drawRect(210, 116, 200, 64);
-			g.drawString("True", 262, 160);
-			
-			g.setFont(normalFont);
-			g.setColor(Color.white);
-			g.drawRect(210, 200, 200, 64);
-			g.drawString("False", 258, 250);
-			
-	//		g.setColor(Color.white);
-	//		g.drawRect(210, 284, 200, 64);
+			if (gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Init) {
+				Question question = gameManager.getSelectedObject().getQuestion();
+				if (question.getType() == TypeOfQuestion.TrueFalse) {
+					
+					String strQuestion = question.getQuestion();
+					Font bigFont = new Font("airal", 1,30);
+					Font normalFont = new Font("airal", 1,40);
+					
+					g.setFont(bigFont);
+					g.setColor(Color.WHITE);
+					g.drawString(strQuestion, 20, 50);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 116, 200, 64);
+					g.drawString("True", 262, 160);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 200, 200, 64);
+					g.drawString("False", 258, 250);
+				} else if (question.getType() == TypeOfQuestion.MutipleChoice) {
+					
+					String strQuestion = question.getQuestion();
+					Font bigFont = new Font("airal", 1,30);
+					Font normalFont = new Font("airal", 1,40);
+					
+					g.setFont(bigFont);
+					g.setColor(Color.WHITE);
+					g.drawString(strQuestion, 20, 50);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 116, 200, 64);
+					g.drawString("True", 262, 160);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 200, 200, 64);
+					g.drawString("False", 258, 250);
+				}else if (question.getType() == TypeOfQuestion.ShortAnswer) {
+					
+					String strQuestion = question.getQuestion();
+					Font bigFont = new Font("airal", 1,30);
+					Font normalFont = new Font("airal", 1,40);
+					
+					g.setFont(bigFont);
+					g.setColor(Color.WHITE);
+					g.drawString(strQuestion, 20, 50);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 116, 200, 64);
+					g.drawString("True", 262, 160);
+					
+					g.setFont(normalFont);
+					g.setColor(Color.white);
+					g.drawRect(210, 200, 200, 64);
+					g.drawString("False", 258, 250);
+				}
+				
+		//		g.setColor(Color.white);
+		//		g.drawRect(210, 284, 200, 64);
+			} else if(gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Locked) {
+				Font smallFont = new Font("airal", 1,32);
+				Font normalFont = new Font("airal", 1,40);
+				g.setFont(smallFont);
+				g.setColor(Color.WHITE);
+				g.drawString("This door has been locked permanently", 10, 150);
+				
+				g.setFont(normalFont);
+				g.setColor(Color.white);
+				g.drawRect(210, 300, 200, 64);
+				g.drawString("OK", 280, 350);
+			} else if (gameManager.getSelectedObject().getID() == ID.Target) {
+				Font smallFont = new Font("airal", 1,32);
+				Font normalFont = new Font("airal", 1,40);
+				g.setFont(smallFont);
+				g.setColor(Color.WHITE);
+				g.drawString("Congratulations !!! You won the game", 20, 150);
+				
+				g.setFont(smallFont);
+				g.setColor(Color.WHITE);
+				g.drawString("Click OK to play New Game", 100, 200);
+				
+				g.setFont(normalFont);
+				g.setColor(Color.white);
+				g.drawRect(210, 300, 200, 64);
+				g.drawString("OK", 280, 350);
+			}
 		}
 	}
 

@@ -7,7 +7,6 @@ public abstract class GameObject {
 	//protected means it can only be accessed by which object inherits the GameObject 
 	protected int x,y; 	// location
 	protected ID id;
-	protected int velX, velY;
 	
 	public GameObject(int x, int y, ID id) {
 		this.x = x;
@@ -18,10 +17,22 @@ public abstract class GameObject {
 	public abstract void tick(); 				// Update 
 	public abstract void render(Graphics g); 	// draw window
 	public abstract Rectangle getBounds();		// handle collision (Rectangle has intersect method to handle if two rectangles intersect each other)
-	public void moveUp() {};
-	public void moveDown() {};
-	public void moveRight() {};
-	public void moveLeft() {};
+	public void moveUp() {}
+	public void moveDown() {}
+	public void moveRight() {}
+	public void moveLeft() {}
+	public void moveForward() {}
+	public void moveBackward() {}
+	public void setDoorStatus(DoorStatus ds) {}
+	public DoorStatus getDoorStatus() {
+		return null;
+	}
+	public Question getQuestion() {
+		return null;
+	}
+	public String toString() {
+		return null;
+	}
 	public void setX(int x) {
 		this.x = x;
 	}
@@ -39,17 +50,5 @@ public abstract class GameObject {
 	}
 	public ID getID() {
 		return id;
-	}
-	public void setVelX(int velX) {
-		this.velX = velX;
-	}
-	public void setVelY(int velY) {
-		this.velY = velY;
-	}
-	public int getVelX() {
-		return velX;
-	}
-	public int getVelY() {
-		return velY;
 	}
 }
