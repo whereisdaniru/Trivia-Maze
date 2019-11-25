@@ -1,4 +1,4 @@
-package TrivialMaze;
+package triviaMaze;
 
 public class Question {
 	private int id;

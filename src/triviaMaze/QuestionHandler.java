@@ -1,4 +1,4 @@
-package TrivialMaze;
+package triviaMaze;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
