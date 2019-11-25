@@ -10,7 +10,7 @@ import java.util.Random;
 public class QuestionHandler {
 	LinkedList<Question> questions = new LinkedList<Question>();
 	private int questionUsed = 0;
-	// Use Singleton pattern to coonect and get data instance only one time
+	// Use Singleton pattern to connect and get data instance only one time
 	// static variable single_instance of type QuestionHandler 
     private static QuestionHandler single_instance = null;
 	public QuestionHandler() {
