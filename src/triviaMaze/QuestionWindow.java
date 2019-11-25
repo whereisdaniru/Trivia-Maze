@@ -1,5 +1,4 @@
-package TrivialMaze;
-
+package triviaMaze;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

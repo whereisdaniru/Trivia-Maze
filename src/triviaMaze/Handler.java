@@ -1,5 +1,4 @@
-package TrivialMaze;
-
+package triviaMaze;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
