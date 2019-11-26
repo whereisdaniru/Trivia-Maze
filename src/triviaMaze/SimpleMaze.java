@@ -1,6 +1,6 @@
 package triviaMaze;
 
-public class SimpleMaze implements MazeBuilder {
+public class SimpleMaze implements MazeBuilder{
 
 	@Override
 	public void buildMaze(int row, int col, int x, int y, int roomDist, int borderDist, Handler handler, GameManager gameManager) {
