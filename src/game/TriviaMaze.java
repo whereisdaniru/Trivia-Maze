@@ -18,7 +18,7 @@ public class TriviaMaze {
 		char choice;
 		
 		
-		while(gameInProgress) {
+		while(gameInProgress && canSolve(field, 0, 0)) {
 			int currRow = player.getLocation().getX();
 			int currColumn = player.getLocation().getY();
 			Room currRoom = field[currRow][currColumn];
@@ -73,6 +73,33 @@ public class TriviaMaze {
 			}
 		}
 		return false;
+	}
+	
+/*
+ * Uses backtracking to find a valid path through the Maze.	
+ */
+
+private static boolean canSolve(Room[][] field, int x, int y) {
+	// Reached Exit, Maze is still solvable
+	if(x == field.length - 1 && y == field[0].length - 1)
+		return true;
+	// If x and y aren't outside the bounds of the array, attempt to move.
+	if(isSafe(field, x, y)) {
+		// Move East
+		if(canSolve(field, x + 1, y))
+			return true;
+		// Move South
+		if(canSolve(field, x, y + 1))
+			return true;
+		// Backtrack
+		return false;
+	}
+	// Returns false if no valid path
+	return false;
+	}
+
+	private static boolean isSafe(Room[][] field, int x, int y) {
+		return (x >= 0 && x < field.length && y >= 0 && y < field[0].length);
 	}
 
 	private static boolean canMove(char c, Room currRoom) {
