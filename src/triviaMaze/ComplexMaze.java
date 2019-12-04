@@ -1,13 +1,15 @@
 package triviaMaze;
 
-public class SimpleMaze implements MazeBuilder{
+import java.util.Random;
+
+public class ComplexMaze implements MazeBuilder{
 
 	@Override
 	public void buildMaze(int row, int col, int x, int y, int roomDist, int borderDist, Handler handler, GameManager gameManager) {
 		buildRoom(row, col, x, y, handler);
 		buildDoor(row, col, x, y, handler);
-		handler.addObject(new Player(x + borderDist, y + borderDist, ID.Player,x + borderDist, y + borderDist,row,col, handler, gameManager));
-		handler.addObject(new Target(x + borderDist + roomDist * 2 * (col -1), y + borderDist + roomDist * 2 * (row -1) , ID.Target));
+		handler.addObject(new Player(x + borderDist, y + borderDist  + (roomDist * 2 * randomPosition(row)), ID.Player,x + borderDist, y + borderDist,row,col, handler, gameManager));
+		handler.addObject(new Target(x + borderDist + roomDist * 2 * (col -1), y + borderDist +  + (roomDist * 2 * randomPosition(row)) , ID.Target));
 	}
 	
 	private void buildRoom(int row, int col, int x, int y, Handler handler) {
@@ -37,5 +39,10 @@ public class SimpleMaze implements MazeBuilder{
 			x = temp;
 			y += horDist;
 		}
+	}
+	private int randomPosition(int row) {
+		Random rd = new Random();
+		int index = rd.nextInt(row);
+		return index;
 	}
 }

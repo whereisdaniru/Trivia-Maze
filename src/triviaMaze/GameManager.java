@@ -4,8 +4,21 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedList;
 
-public class GameManager extends Canvas implements Runnable {
+import javax.swing.JOptionPane;
+
+public class GameManager extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 640, HEIGHT = 480;  // Center: WIDTH/2 -32, HEIGHT/2 -32
@@ -13,7 +26,8 @@ public class GameManager extends Canvas implements Runnable {
 //	private static final int YPLAYER = 148; // Initialize location y of player
 	private static final int ROOMDIST = 30; // Distance from center player to the door/wall
 	private static final int BORDERDIST = 18; // Distance from border player to the door/wall
-	private static int x = 210, y = 130; // Initialize location of first room.
+	private static int x = 190, y = 90; // Initialize location of first room.
+	private static int row = 0, col = 0; // Initialize size of maze
 	
 	private Direction direction; 	// direction of movement
 	
@@ -32,11 +46,10 @@ public class GameManager extends Canvas implements Runnable {
 		questionWD = new QuestionWindow(handler,this);
 		this.addMouseListener(questionWD);
 		this.addKeyListener(new KeyInput(handler, this));
-		new Window(WIDTH, HEIGHT, "Trivial Maze", this);
+		new Window(WIDTH, HEIGHT, "Trivial Maze",handler, this);
 		
-		//handler.addObject(new Player(118, 118, ID.Player));
 		if(windowState == WindowState.GameWindow) {
-			newGame();
+			newGame("easy");
 		}
 	}
 	
@@ -125,10 +138,108 @@ public class GameManager extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	public void saveGame(String filename) {
+		if(filename == null)
+			return;
+		// Serialization  
+        try
+        {    
+            //Saving of object in a file 
+            FileOutputStream file = new FileOutputStream(filename); 
+            ObjectOutputStream out = new ObjectOutputStream(file); 
+            
+            // Save all gameobjects to file
+            out.writeObject(x);
+            out.writeObject(y);
+            out.writeObject(row);
+            out.writeObject(col);
+            out.writeObject(handler);
+            
+            out.close(); 
+            file.close(); 
+            //System.out.println("Object has been serialized"); 
+        } 
+          
+        catch(IOException ex) 
+        { 
+        	JOptionPane.showMessageDialog(null,"Cannot save to this file");
+            System.out.println("IOException is caught: "+ ex); 
+        } 
+	}
+	public LinkedList<GameObject> loadGame(String filename) {
+		if(filename == null)
+			return null;
+		// Deserialization 
+		LinkedList<GameObject> temp = new LinkedList<GameObject>();
+        try
+        {   
+            // Reading the object from a file 
+            FileInputStream file = new FileInputStream(filename); 
+            ObjectInputStream in = new ObjectInputStream(file); 
+            
+            // Method for deserialization of object 
+            x = (int)in.readObject();
+            y = (int)in.readObject();
+            row = (int)in.readObject();
+            col = (int)in.readObject();
+            Handler handler = (Handler)in.readObject();
+            temp = handler.getGameObjects();
 
-	public void newGame() {
-		SimpleMaze simpleMaze = new SimpleMaze();
-		simpleMaze.buildMaze(3, 3, x, y, ROOMDIST,BORDERDIST, handler, this);
+            for(int i = 0; i < temp.size(); i++) {
+            	GameObject gameobject = temp.get(i);
+            	//Remove the old Player object and add new Player object with the old Player info
+            	if(gameobject.getID() == ID.Player) {
+            		Player player = new Player(gameobject.getX(),gameobject.getY(), ID.Player,x + BORDERDIST, y + BORDERDIST,row,col, this.handler, this);
+		        	temp.remove(i);
+		        	temp.add(i, player);
+            	}
+            }
+            in.close(); 
+            file.close(); 
+            //System.out.println(handler.getGameObjects().size());
+            //System.out.println("Object has been deserialized "); 
+        } 
+          
+        catch(IOException ex) 
+        { 
+        	JOptionPane.showMessageDialog(null,"Cannot load this file");
+            System.out.println("IOException is caught: " + ex); 
+        } 
+          
+        catch(ClassNotFoundException ex) 
+        { 
+        	JOptionPane.showMessageDialog(null,"Cannot load this file");
+            System.out.println("ClassNotFoundException is caught"); 
+        }
+        return temp;
+	}
+
+	public void loadGame(LinkedList<GameObject> gameObjects) {
+		//Clear game objects before add new game objects from save file
+		clearObject();
+		for(int i = 0; i < gameObjects.size(); i++) {
+			GameObject temp = gameObjects.get(i);
+			handler.addObject(temp);
+		}
+	}
+	public void newGame(String level) {
+		if(level.equals("easy")) {
+			SimpleMaze simpleMaze = new SimpleMaze();
+			Maze maze = new Maze(simpleMaze);
+			row = 4;
+			col = 4;
+			x = 190;
+			y = 90;
+			maze.buildMaze(row, col, x, y, ROOMDIST,BORDERDIST, handler, this);
+		}else if(level.equals("hard")) {
+			ComplexMaze complexMaze = new ComplexMaze();
+			Maze maze = new Maze(complexMaze);
+			x = 10;
+			y = 20;
+			col = 10;
+			row = 6;
+			maze.buildMaze(row, col, x, y, ROOMDIST, BORDERDIST, handler, this);
+		}
 	}
 	public void clearObject() {
 		selectedObject = null;
@@ -156,16 +267,5 @@ public class GameManager extends Canvas implements Runnable {
 	}
 	public GameObject getSelectedObject() {
 		return selectedObject;
-	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new GameManager();
-//		int i = 0;
-//		// loop until get a question which is never used
-//		while(i<7) {
-//			Question q = new Question();
-//			System.out.println(q.toString());
-//			i++;
-//		}
 	}
 }
