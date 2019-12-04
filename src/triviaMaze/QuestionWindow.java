@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 import java.util.Random;
 
 import javax.swing.JScrollPane;
@@ -12,7 +13,8 @@ import javax.swing.JTextArea;
 
 import java.awt.Rectangle;
 
-public class QuestionWindow extends MouseAdapter{
+public class QuestionWindow extends MouseAdapter implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private GameManager gameManager;
 	private Handler handler;
 	// To store temporary answer from render
@@ -78,7 +80,7 @@ public class QuestionWindow extends MouseAdapter{
 				if(mouseOver(xmouse, ymouse, new Rectangle(210, 300, 200, 64))) {
 					//Call the new game function
 					gameManager.clearObject();
-					gameManager.newGame();
+					gameManager.newGame("hard");
 					//gameManager.setWindowState(WindowState.GameWindow);
 				}
 			}
@@ -100,14 +102,14 @@ public class QuestionWindow extends MouseAdapter{
 		gameManager.setWindowState(WindowState.GameWindow);
 	}
 	private void playerMoveForward() {
-		for (GameObject gameObject : handler.gameObjects) {
+		for (GameObject gameObject : handler.getGameObjects()) {
 			if(gameObject.getID() == ID.Player) {
 				gameObject.moveForward();
 			}
 		}
 	}
 	private void playerMoveBackward() {
-		for (GameObject gameObject : handler.gameObjects) {
+		for (GameObject gameObject : handler.getGameObjects()) {
 			if(gameObject.getID() == ID.Player) {
 				gameObject.moveBackward();
 			}
@@ -168,6 +170,7 @@ public class QuestionWindow extends MouseAdapter{
 				renderQuestion(g,strQuestion,6);
 				
 				// Render answers
+				// True/False
 				if (question.getType() == TypeOfQuestion.TrueFalse) {
 					Font normalFont = new Font("airal", 1,40);
 					
@@ -184,7 +187,7 @@ public class QuestionWindow extends MouseAdapter{
 					g.drawRect(210, 300, 200, 64);
 					g.drawString("False", 258, 350);
 					tempAnswer2 = "False";
-					
+				//Multiple choice
 				} else if (question.getType() == TypeOfQuestion.MutipleChoice) {
 					Font normalFont = new Font("airal", 1,20);
 					String[] answers = new String[4];
@@ -220,7 +223,7 @@ public class QuestionWindow extends MouseAdapter{
 					g.drawRect(320, 300, 290, 64);
 					g.drawString("D. " + answers[3], 330, 340);
 					tempAnswer4 = answers[3];
-					
+				//Short answer
 				}else if (question.getType() == TypeOfQuestion.ShortAnswer) {
 					Font normalFont = new Font("airal", 1,40);
 					
@@ -229,7 +232,7 @@ public class QuestionWindow extends MouseAdapter{
 					g.drawRect(210, 300, 200, 64);
 					g.drawString("OK", 280, 350);
 				}
-				
+			// Locked screen
 			} else if(gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Locked) {
 				Font smallFont = new Font("airal", 1,32);
 				Font normalFont = new Font("airal", 1,40);
@@ -241,6 +244,7 @@ public class QuestionWindow extends MouseAdapter{
 				g.setColor(Color.white);
 				g.drawRect(210, 300, 200, 64);
 				g.drawString("OK", 280, 350);
+			// Won screen
 			} else if (gameManager.getSelectedObject().getID() == ID.Target) {
 				Font smallFont = new Font("airal", 1,32);
 				Font normalFont = new Font("airal", 1,40);
