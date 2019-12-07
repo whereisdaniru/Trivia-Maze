@@ -17,7 +17,7 @@ class QuestionHandler_tests
 	@Test
 	void QuestionHandler_getQuestionsList()
 	{
-		QuestionHandler testqh = new QuestionHandler();
+		QuestionHandler testqh =  QuestionHandler.getInstance();
 		assertFalse(testqh.getQuestions().isEmpty());
 		
 	}
