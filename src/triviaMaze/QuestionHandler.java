@@ -10,7 +10,15 @@ import java.util.Random;
 
 public class QuestionHandler implements Serializable{
 	private static final long serialVersionUID = 1L;
-	LinkedList<Question> questions = new LinkedList<Question>();
+	private LinkedList<Question> questions = new LinkedList<Question>();
+	
+	public LinkedList<Question> getQuestions() {
+		return questions;
+	}
+	
+	public void setQuestions(LinkedList<Question> questions) {
+		this.questions = questions;
+	}
 	private int questionUsed = 0;
 	// Use Singleton pattern to coonect and get data instance only one time
 	// static variable single_instance of type QuestionHandler 
