@@ -73,7 +73,7 @@ public class Player extends GameObject{
 	}
 	public void moveRight() {
 		if(this.getX() < xFirstRoom + gameManager.getDistRoom() *2 * (col-1))
-			this.setX(this.getX() + gameManager.getDistRoom());
+			this.setX(this.getX() + gameManager.getDistRoom());			
 	}
 	public void moveLeft() {
 		if(this.getX() > xFirstRoom)

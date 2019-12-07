@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import triviaMaze.Door;
 import triviaMaze.DoorStatus;
 import triviaMaze.ID;
+import triviaMaze.TypeOfQuestion;
+import triviaMaze.Question;
 
 class Door_tests {
 
@@ -44,5 +46,17 @@ class Door_tests {
 		Door testDoor = new Door(0, 0, ID.DoorVertical, null, DoorStatus.Locked);
 		assertFalse(testDoor.getDoorStatus() == DoorStatus.Passed);
 	}
+	
+	@Test
+	void Doortest_getQuestion() 
+	{
+		Question q = new Question(0, "This Question is correct", "yes", "yes", "no", "no", "no", TypeOfQuestion.MutipleChoice, 0);
+		Door testDoor = new Door(0, 0, ID.DoorVertical, q, DoorStatus.Init);
+		assertTrue(testDoor.getQuestion() != null);
+	}
+
+	
+
+	
 
 }

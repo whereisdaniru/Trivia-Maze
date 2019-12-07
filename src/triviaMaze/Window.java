@@ -28,6 +28,8 @@ import javax.swing.JWindow;
 import admin.Login;
 
 
+
+
 public class Window extends Canvas {
 
 	private static final long serialVersionUID = 1L;
