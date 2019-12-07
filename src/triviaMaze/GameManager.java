@@ -46,7 +46,7 @@ public class GameManager extends Canvas implements Runnable{
 		questionWD = new QuestionWindow(handler,this);
 		this.addMouseListener(questionWD);
 		this.addKeyListener(new KeyInput(handler, this));
-		new Window(WIDTH, HEIGHT, "Trivial Maze",handler, this);
+		new Window(WIDTH, HEIGHT, "Trivia Maze",handler, this);
 		
 		if(windowState == WindowState.GameWindow) {
 			newGame("easy");

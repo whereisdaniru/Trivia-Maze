@@ -180,10 +180,10 @@ public class Window extends Canvas {
         }
         public void actionPerformed(ActionEvent e) {
         	String about = "Trivia Maze ver 1.0" +"\n\n" + 
-        					"Player must navigate through from entrance to exit to win the game." +"\n" +
-        					"In order to pass through a door, player need to have an correct answer."+"\n" +
-        					"If a user is unable to answer a question, that door is then locked permanently."+"\n\n" +
-        					"Use Up-Down-Left-Right keyboard to control Player.";
+        					"Player must navigate through the maze from entrance to exit to win the game." +"\n" +
+        					"In order to pass through a door, the player needs to correctly answer a question."+"\n" +
+        					"If the user is unable to answer a question, that door is then locked permanently."+"\n\n" +
+        					"Use Up-Down-Left-Right on the keyboard to control Player.";
         	JOptionPane.showMessageDialog(null, about);
         }
     }
