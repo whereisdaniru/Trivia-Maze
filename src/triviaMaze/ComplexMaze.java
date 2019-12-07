@@ -8,8 +8,9 @@ public class ComplexMaze implements MazeBuilder{
 	public void buildMaze(int row, int col, int x, int y, int roomDist, int borderDist, Handler handler, GameManager gameManager) {
 		buildRoom(row, col, x, y, handler);
 		buildDoor(row, col, x, y, handler);
+		handler.addObject(new Hint(x + borderDist + roomDist * 2 * (randomPosition(col-2)+1), y + borderDist + (roomDist * 2 * (randomPosition(row-2)+1)) , ID.Hint));
 		handler.addObject(new Player(x + borderDist, y + borderDist  + (roomDist * 2 * randomPosition(row)), ID.Player,x + borderDist, y + borderDist,row,col, handler, gameManager));
-		handler.addObject(new Target(x + borderDist + roomDist * 2 * (col -1), y + borderDist +  + (roomDist * 2 * randomPosition(row)) , ID.Target));
+		handler.addObject(new Target(x + borderDist + roomDist * 2 * (col -1), y + borderDist + (roomDist * 2 * randomPosition(row)) , ID.Target));
 	}
 	
 	private void buildRoom(int row, int col, int x, int y, Handler handler) {
@@ -40,9 +41,9 @@ public class ComplexMaze implements MazeBuilder{
 			y += horDist;
 		}
 	}
-	private int randomPosition(int row) {
+	private int randomPosition(int val) {
 		Random rd = new Random();
-		int index = rd.nextInt(row);
+		int index = rd.nextInt(val);
 		return index;
 	}
 }

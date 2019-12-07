@@ -2,5 +2,6 @@ package triviaMaze;
 
 public enum WindowState {
 	GameWindow,
-	QuestionWindow
+	QuestionWindow,
+	GameOver
 }

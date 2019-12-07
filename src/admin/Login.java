@@ -1,9 +1,7 @@
 package admin;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Font;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,7 +23,7 @@ public class Login {
         JFrame frame = new JFrame("Login");
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);		
-        frame.setSize(300, 200);
+        frame.setSize(280, 200);
 
         //Creating the panel at bottom and adding components
         JPanel panel = new JPanel(); // the panel is not visible in output
@@ -62,21 +60,19 @@ public class Login {
 				}
 				else {
 					System.out.println("Wrong pass");
-					//int dialogButton = JOptionPane.WARNING_MESSAGE;
-            		//int dialogResult = JOptionPane.showConfirmDialog (null, "The username or password you entered is incorrect","Warning",dialogButton);
-            		JOptionPane.showMessageDialog(null,"The username or password you entered is incorrect");
-					
-//            		if(dialogResult == JOptionPane.OK_OPTION){
-//            			System.out.println("Yes");
-//            		}
-//            		else {
-//            			System.out.println("No");
-//            		}
+					JOptionPane.showMessageDialog(null,"The username or password you entered is incorrect");
 				}
 			}
 		});
         JButton btCancel = new JButton("Cancel");
-
+        btCancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				frame.setVisible(false);
+			}
+		});
         
         
         panel.add(btLogin);
@@ -85,7 +81,6 @@ public class Login {
         //Adding Components to the frame.
         frame.getContentPane().add(BorderLayout.NORTH, panelLogin);
         frame.getContentPane().add(BorderLayout.CENTER, panel);
-        //frame.getContentPane().add(BorderLayout.CENTER, panel);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 	}

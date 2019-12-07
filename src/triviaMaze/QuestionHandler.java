@@ -20,10 +20,10 @@ public class QuestionHandler implements Serializable{
 		this.questions = questions;
 	}
 	private int questionUsed = 0;
-	// Use Singleton pattern to coonect and get data instance only one time
+	// Use Singleton pattern to connect and get data instance only one time
 	// static variable single_instance of type QuestionHandler 
     private static QuestionHandler single_instance = null;
-	public QuestionHandler() {
+	private QuestionHandler() {
 		addQuestionToList();
 	}
 	// static method to create instance of Singleton class 
@@ -126,8 +126,6 @@ public class QuestionHandler implements Serializable{
 		         }else if( type == 1) {
 		        	 typeOfQuestion = TypeOfQuestion.TrueFalse;
 		         }
-		         else if (type == 2)
-		        	 typeOfQuestion = TypeOfQuestion.ShortAnswer;
 		         //int status = rs.getInt("Status");
 		         int status = 0;
 		         this.addObject(new Question(id, question, answer, answers[0], answers[1], answers[2], answers[3], typeOfQuestion, status));

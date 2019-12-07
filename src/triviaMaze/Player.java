@@ -24,17 +24,11 @@ public class Player extends GameObject{
 
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
-		//x += velX;
-		//y += velY;
-
-		//clamp player to stay in our screen
-		//x = GameManager.clamp(x, 0, GameManager.WIDTH - 48);
-		//y = GameManager.clamp(y, 0, GameManager.HEIGHT - 72);
 		collisionCheck();
 	}
 	private void collisionCheck() {
-		for (GameObject gameObject : handler.getGameObjects()) {
+		for(int i = 0; i < handler.getGameObjects().size(); i++) {
+			GameObject gameObject = handler.getGameObjects().get(i);
 			// check intersect of player and door
 			if(gameObject.getID() == ID.DoorVertical || gameObject.getID() == ID.DoorHorizontal) {
 				if(getBounds().intersects(gameObject.getBounds()) && (gameObject.getDoorStatus() == DoorStatus.Init || gameObject.getDoorStatus() == DoorStatus.Locked)) {
@@ -52,16 +46,13 @@ public class Player extends GameObject{
 					gameManager.setWindowState(WindowState.QuestionWindow);
 				}
 			}
+			else if(gameObject.getID() == ID.Hint) {
+				if(getBounds().intersects(gameObject.getBounds())){
+					handler.removeObject(gameObject);
+					gameManager.setHintCount(gameManager.getHintCount()+3);
+				}
+			}
 		}
-//		for (GameObject gameObject : handler.gameObjects) {
-//			if(gameObject.getID() == ID.Player && gameManager.getWindowState() == WindowState.GameWindow) {
-//				//System.out.println(key);
-//				if(key == KeyEvent.VK_UP && gameObject.getY() > YPLAYER) { gameObject.setY(gameObject.getY() - DISTROOM); System.out.println(key);}				
-//				if(key == KeyEvent.VK_DOWN && gameObject.getY() < YPLAYER + DISTROOM * 4 ) gameObject.setY(gameObject.getY() + DISTROOM);
-//				if(key == KeyEvent.VK_RIGHT && gameObject.getX() < XPLAYER + DISTROOM * 4) gameObject.setX(gameObject.getX() + DISTROOM);
-//				if(key == KeyEvent.VK_LEFT && gameObject.getX() > XPLAYER) gameObject.setX(gameObject.getX() - DISTROOM);
-//			}
-//		}
 	}
 	public void moveUp() {
 		if(this.getY() > yFirstRoom)

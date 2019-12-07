@@ -12,9 +12,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -23,10 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.DefaultCaret;
-
-import triviaMaze.QuestionHandler;
-import triviaMaze.TypeOfQuestion;
 
 public class AdminWindow {
 	static boolean isDataGood = true; //to check data condition before insert
@@ -96,14 +89,14 @@ public class AdminWindow {
 		//Creating the Frame
         JFrame frame = new JFrame("Adding Question");
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(940, 600);
+        frame.setSize(900, 600);
         
         // Title
         JPanel panelText = new JPanel();
         JLabel lbTitle = new JLabel("Question Table:");
         
         // Show question table
-        JTextArea ta = new JTextArea(5,80);
+        JTextArea ta = new JTextArea(13,70);
 		ta.append(selectData());
 		panelText.add(lbTitle);
 		panelText.add(new JScrollPane(ta));
@@ -255,15 +248,13 @@ public class AdminWindow {
 		});
         panelButton.add(btAdd);
         panelButton.add(btReset);
-
-        
-		//insertQuestion("Where can you find London bridge today", "USA","England","France","Gemany",TypeOfQuestion.MutipleChoice.ordinal());
 		
         //Adding Components to the frame.
 		frame.getContentPane().add(BorderLayout.NORTH, panelText);
         frame.getContentPane().add(BorderLayout.CENTER, panel);
         frame.getContentPane().add(BorderLayout.SOUTH, panelButton);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);	
         frame.setVisible(true);	
 		
 	}
