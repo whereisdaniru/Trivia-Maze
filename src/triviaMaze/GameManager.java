@@ -2,6 +2,7 @@ package triviaMaze;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.io.FileInputStream;
@@ -9,11 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -22,28 +18,31 @@ public class GameManager extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 640, HEIGHT = 480;  // Center: WIDTH/2 -32, HEIGHT/2 -32
-//	private static final int XPLAYER = 228; // Initialize location x of player
-//	private static final int YPLAYER = 148; // Initialize location y of player
 	private static final int ROOMDIST = 30; // Distance from center player to the door/wall
 	private static final int BORDERDIST = 18; // Distance from border player to the door/wall
 	private static int x = 190, y = 90; // Initialize location of first room.
 	private static int row = 0, col = 0; // Initialize size of maze
+	private int hintCount = 3;
 	
 	private Direction direction; 	// direction of movement
 	
 	private Thread threadGame;
 	private boolean running = false;
+	private boolean paused = false;
+	private boolean gameOver = false;
 	
 	private Handler handler;
+	private Health health;
 	private QuestionHandler questionHandler;
 	private QuestionWindow questionWD;
-	private GameObject selectedObject = null;
+	private GameObject selectedObject = null; //To handler which object was collision with player
 	private WindowState windowState = WindowState.GameWindow; //public for player can change the window state when hit the door
 	
 	public GameManager() {
 		handler = new Handler();
 		questionHandler = QuestionHandler.getInstance();
 		questionWD = new QuestionWindow(handler,this);
+		health = new Health(10, 10, ID.Health, 100, 255); 
 		this.addMouseListener(questionWD);
 		this.addKeyListener(new KeyInput(handler, this));
 		new Window(WIDTH, HEIGHT, "Trivia Maze",handler, this);
@@ -98,7 +97,14 @@ public class GameManager extends Canvas implements Runnable{
 	
 	private void tick() {
 		if(windowState == WindowState.GameWindow) {
-			handler.tick();
+			if(!paused) {
+				handler.tick();
+				health.tick();
+				if(health.getHealth() <= 0) {
+					health.setHealth(100);
+					windowState = WindowState.GameOver;
+				}
+			}
 		}
 	}
 	
@@ -116,7 +122,13 @@ public class GameManager extends Canvas implements Runnable{
 		
 		if(windowState == WindowState.GameWindow) {
 			handler.render(g);
-		} else if (windowState == WindowState.QuestionWindow) {
+			health.render(g);
+			if(paused) {
+				g.setColor(Color.red);
+				g.setFont(new Font("airal", 1,30));
+				g.drawString("PAUSED! Press P to Play", 250, 40);
+			}
+		} else if (windowState == WindowState.QuestionWindow || windowState == WindowState.GameOver) {
 			questionWD.render(g);
 		}
 		
@@ -153,6 +165,8 @@ public class GameManager extends Canvas implements Runnable{
             out.writeObject(y);
             out.writeObject(row);
             out.writeObject(col);
+            out.writeObject(health.getHealth());
+            out.writeObject(hintCount);
             out.writeObject(handler);
             
             out.close(); 
@@ -182,6 +196,8 @@ public class GameManager extends Canvas implements Runnable{
             y = (int)in.readObject();
             row = (int)in.readObject();
             col = (int)in.readObject();
+            health.setHealth((float)in.readObject());
+            hintCount = (int)in.readObject();
             Handler handler = (Handler)in.readObject();
             temp = handler.getGameObjects();
 
@@ -217,12 +233,18 @@ public class GameManager extends Canvas implements Runnable{
 	public void loadGame(LinkedList<GameObject> gameObjects) {
 		//Clear game objects before add new game objects from save file
 		clearObject();
+		if(paused)
+			paused = false;
 		for(int i = 0; i < gameObjects.size(); i++) {
 			GameObject temp = gameObjects.get(i);
 			handler.addObject(temp);
 		}
 	}
 	public void newGame(String level) {
+		health.setHealth(100);
+		hintCount = 3;
+		if(paused)
+			paused = false;
 		if(level.equals("easy")) {
 			SimpleMaze simpleMaze = new SimpleMaze();
 			Maze maze = new Maze(simpleMaze);
@@ -235,9 +257,9 @@ public class GameManager extends Canvas implements Runnable{
 			ComplexMaze complexMaze = new ComplexMaze();
 			Maze maze = new Maze(complexMaze);
 			x = 10;
-			y = 20;
+			y = 80;
 			col = 10;
-			row = 6;
+			row = 5;
 			maze.buildMaze(row, col, x, y, ROOMDIST, BORDERDIST, handler, this);
 		}
 	}
@@ -246,6 +268,24 @@ public class GameManager extends Canvas implements Runnable{
 		windowState = WindowState.GameWindow;
 		handler.removeAllObject();
 		questionHandler.resetQuestion();
+	}
+	public void pauseGame() {
+		if(paused)
+			paused = false;
+		else
+			paused = true;
+	}
+	public Health getHealthObject() {
+		return this.health;
+	}
+	public boolean getPaused() {
+		return this.paused;
+	}
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+	public boolean getGameOver() {
+		return this.gameOver;
 	}
 	public WindowState getWindowState() {
 		return this.windowState;
@@ -267,5 +307,11 @@ public class GameManager extends Canvas implements Runnable{
 	}
 	public GameObject getSelectedObject() {
 		return selectedObject;
+	}
+	public void setHintCount(int hint) {
+		this.hintCount = hint;
+	}
+	public int getHintCount() {
+		return hintCount;
 	}
 }

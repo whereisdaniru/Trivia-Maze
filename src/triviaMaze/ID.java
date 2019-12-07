@@ -5,5 +5,7 @@ public enum ID {
 	Target,
 	Room,
 	DoorVertical,
-	DoorHorizontal
+	DoorHorizontal,
+	Hint,
+	Health
 }

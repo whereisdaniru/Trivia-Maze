@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -45,6 +46,18 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 					if(mouseOver(xmouse, ymouse, new Rectangle(210, 300, 200, 64))) {
 						handleClickAnswer(correctAnswer,tempAnswer2);
 					}
+					// Hint button click handle
+					if(mouseOver(xmouse, ymouse, new Rectangle(10, 375, 100, 30))) {
+						char firstLetter = correctAnswer.charAt(0);
+						String hintString = "";
+						if (gameManager.getHintCount() > 0) {
+							hintString = "This is the Hint" + "\n" + "The first letter of the anser is " + firstLetter;
+							gameManager.setHintCount(gameManager.getHintCount()-1);
+						}
+						else
+							hintString = "No Hint available";
+						JOptionPane.showMessageDialog(null, hintString);
+					}
 				} else if (question.getType() == TypeOfQuestion.MutipleChoice) {
 					// A. button click handle
 					if(mouseOver(xmouse, ymouse, new Rectangle(10, 216, 290, 64))) {
@@ -62,9 +75,18 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 					if(mouseOver(xmouse, ymouse, new Rectangle(320, 300, 290, 64))) {
 						handleClickAnswer(correctAnswer,tempAnswer4);
 					}
-					
-				}else if (question.getType() == TypeOfQuestion.ShortAnswer) {
-					
+					// Hint button click handle
+					if(mouseOver(xmouse, ymouse, new Rectangle(10, 375, 100, 30))) {
+						char firstLetter = correctAnswer.charAt(0);
+						String hintString = "";
+						if (gameManager.getHintCount() > 0) {
+							hintString = "This is the Hint" + "\n" + "The first letter of the anser is " + firstLetter;
+							gameManager.setHintCount(gameManager.getHintCount()-1);
+						}
+						else
+							hintString = "No Hint available";
+						JOptionPane.showMessageDialog(null, hintString);
+					}
 				}
 			// Locked window handle
 			} else if(gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Locked) {
@@ -83,6 +105,18 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 					gameManager.newGame("hard");
 					//gameManager.setWindowState(WindowState.GameWindow);
 				}
+			} 
+			
+		}//end question window
+		else if(gameManager.getWindowState() == WindowState.GameOver) {
+			int xmouse = e.getX(); //get temporary mouse click position
+			int ymouse = e.getY();
+			// OK button click handle
+			if(mouseOver(xmouse, ymouse, new Rectangle(210, 300, 200, 64))) {
+				//Call the new game function
+				gameManager.clearObject();
+				gameManager.newGame("hard");
+				//gameManager.setWindowState(WindowState.GameWindow);
 			}
 		}
 	}
@@ -90,6 +124,7 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 		// Correct answer
 		if(s1.toLowerCase().equals(s2.toLowerCase())) {
 			playerMoveForward();
+			gameManager.getHealthObject().setHealth(100);
 			// change status of the door to passed
 			gameManager.getSelectedObject().setDoorStatus(DoorStatus.Passed);
 		}
@@ -167,7 +202,7 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 				Question question = gameManager.getSelectedObject().getQuestion();
 				// render question
 				String strQuestion = question.getQuestion() + "?";
-				renderQuestion(g,strQuestion,6);
+				renderQuestion(g,strQuestion,5);
 				
 				// Render answers
 				// True/False
@@ -187,6 +222,14 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 					g.drawRect(210, 300, 200, 64);
 					g.drawString("False", 258, 350);
 					tempAnswer2 = "False";
+					
+					// Render Hint button
+					Font normalFont2 = new Font("airal", 1,20);
+					g.setFont(normalFont2);
+					g.setColor(Color.white);
+					g.drawRect(10, 375, 100, 30);
+					g.drawString("Hint: " + gameManager.getHintCount(), 20, 400);
+					
 				//Multiple choice
 				} else if (question.getType() == TypeOfQuestion.MutipleChoice) {
 					Font normalFont = new Font("airal", 1,20);
@@ -223,14 +266,14 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 					g.drawRect(320, 300, 290, 64);
 					g.drawString("D. " + answers[3], 330, 340);
 					tempAnswer4 = answers[3];
-				//Short answer
-				}else if (question.getType() == TypeOfQuestion.ShortAnswer) {
-					Font normalFont = new Font("airal", 1,40);
 					
+					// Render Hint button
 					g.setFont(normalFont);
 					g.setColor(Color.white);
-					g.drawRect(210, 300, 200, 64);
-					g.drawString("OK", 280, 350);
+					g.drawRect(10, 375, 100, 30);
+					
+					g.drawString("Hint: " + gameManager.getHintCount(), 20, 400);
+					
 				}
 			// Locked screen
 			} else if(gameManager.getSelectedObject().getDoorStatus() == DoorStatus.Locked) {
@@ -260,8 +303,23 @@ public class QuestionWindow extends MouseAdapter implements Serializable{
 				g.setColor(Color.white);
 				g.drawRect(210, 300, 200, 64);
 				g.drawString("OK", 280, 350);
-			}
+			} 
+		} //end question window
+		else if(gameManager.getWindowState() == WindowState.GameOver) {
+			Font smallFont = new Font("airal", 1,32);
+			Font normalFont = new Font("airal", 1,40);
+			g.setFont(smallFont);
+			g.setColor(Color.WHITE);
+			g.drawString("!!! GAME OVER !!!", 180, 150);
+			
+			g.setFont(smallFont);
+			g.setColor(Color.WHITE);
+			g.drawString("Click OK to play New Game", 100, 200);
+			
+			g.setFont(normalFont);
+			g.setColor(Color.white);
+			g.drawRect(210, 300, 200, 64);
+			g.drawString("OK", 280, 350);
 		}
 	}
-
 }

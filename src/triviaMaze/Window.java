@@ -2,28 +2,18 @@ package triviaMaze;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
 
 import admin.Login;
 
@@ -42,22 +32,8 @@ public class Window extends Canvas {
 		frame.setPreferredSize(dimension);
 		frame.setMinimumSize(dimension);
 		frame.setMaximumSize(dimension);
-		
-		//Create the actions shared by the toolbar and menu.
-//        leftAction =   new NewGame(  "Go left",
-//                                        "This is the left button.", 
-//                                        new Integer(KeyEvent.VK_L));
-//        middleAction = new MiddleAction("Do something",
-//                                        "This is the middle button.", 
-//                                        new Integer(KeyEvent.VK_M));
-//        rightAction =  new RightAction( "Go right",
-//                                        "This is the right button.", 
-//                                        new Integer(KeyEvent.VK_R));
-        
-		
         
         frame.getContentPane().add(BorderLayout.NORTH, createMenuBar());
-        //frame.getContentPane().add(BorderLayout.NORTH, mb);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 	// get exit button on window
 		frame.setResizable(false); 								// do not allow resize window
 		frame.setLocationRelativeTo(null);						// to place window in the center of screen
@@ -84,7 +60,7 @@ public class Window extends Canvas {
         m11.add(m111);
         m11.add(m112);
         
-        JMenuItem m12 = new JMenuItem(new SaveAs("Save Game"));
+        JMenuItem m12 = new JMenuItem(new Save("Save Game"));
         m12.setMnemonic(KeyEvent.VK_S);
         JMenuItem m13 = new JMenuItem(new LoadGame("Load Game"));
         m13.setMnemonic(KeyEvent.VK_L);
@@ -128,17 +104,18 @@ public class Window extends Canvas {
             super(text);
         }
         public void actionPerformed(ActionEvent e) {
-        	System.out.println("login");
+        	gameManager.setPaused(true);
         	Login.main(null);
         }
     }
 
-    public class SaveAs extends AbstractAction {
+    public class Save extends AbstractAction {
 		private static final long serialVersionUID = 1L;
-		public SaveAs(String text) {
+		public Save(String text) {
             super(text);
         }
         public void actionPerformed(ActionEvent e) {
+        	gameManager.setPaused(true);
         	JFileChooser fc = new JFileChooser();
         	int response = fc.showSaveDialog(null);
         	if(response == JFileChooser.APPROVE_OPTION) {
@@ -154,6 +131,7 @@ public class Window extends Canvas {
             super(text);
         }
         public void actionPerformed(ActionEvent e) {
+        	gameManager.setPaused(true);
         	JFileChooser fc = new JFileChooser();
         	int response = fc.showOpenDialog(null);
         	if(response == JFileChooser.APPROVE_OPTION) {
@@ -179,11 +157,12 @@ public class Window extends Canvas {
             super(text);
         }
         public void actionPerformed(ActionEvent e) {
+        	gameManager.setPaused(true);
         	String about = "Trivia Maze ver 1.0" +"\n\n" + 
-        					"Player must navigate through the maze from entrance to exit to win the game." +"\n" +
-        					"In order to pass through a door, the player needs to correctly answer a question."+"\n" +
-        					"If the user is unable to answer a question, that door is then locked permanently."+"\n\n" +
-        					"Use Up-Down-Left-Right on the keyboard to control Player.";
+        					"Player must navigate through from entrance to exit to win the game." +"\n" +
+        					"In order to pass through a door, player need to have an correct answer."+"\n" +
+        					"If a user is unable to answer a question, that door is then locked permanently."+"\n\n" +
+        					"Use Up-Down-Left-Right keyboard to control Player.";
         	JOptionPane.showMessageDialog(null, about);
         }
     }
